@@ -22,13 +22,13 @@ AI Secretary for managing a knowledge base in Obsidian. The Secretary should:
 ## Current Sprint
 
 ### Goals (Sprint 1)
-1. Γ£à Basic video analysis working (YouTube video ΓåÆ summary, tags, novelty)
-2. Γ£à Proxy auto-detection from Obsidian settings
-3. Γ£à CLI commands: add, analyze, learn, sync, status
-4. Γ£à Obsidian vault sync
-5. ≡ƒöä Research: Chinese AI APIs for Russia
-6. ≡ƒöä Repository setup on GitHub
-7. ≡ƒöä SPEC.md review
+1. ✅ Basic video analysis working (YouTube video → summary, tags, novelty)
+2. ✅ Proxy auto-detection from Obsidian settings
+3. ✅ CLI commands: add, analyze, learn, sync, status
+4. ✅ Obsidian vault sync
+5. ✅ GitHub repository setup on GitHub
+6. 🔄 Research: Chinese AI APIs for Russia
+7. ⏳ SPEC.md review
 
 ### Completed This Session
 - Video analysis with new structured prompts
@@ -36,22 +36,17 @@ AI Secretary for managing a knowledge base in Obsidian. The Secretary should:
 - Summary: Language-aware (ru/en), structured format
 - Database fixes for tag persistence
 - Proxy auto-detection implemented
+- GitHub repository created and pushed
 
 ### In Progress
-- Setting up GitHub repository
-- Creating research documents
+- Research: Chinese AI APIs testing
 
 ### Blocked
 - None
 
 ## Next Steps (Priority Order)
 
-1. **Create GitHub repository** `ai-secretary`
-   - Push current code
-   - Add .gitignore
-   - Create initial README
-
-2. **Test Chinese AI APIs**
+1. **Test Chinese AI APIs**
    - SiliconFlow (free tier)
    - Zhipu AI (free tier)
    - DeepSeek (cheap, needs Alipay)
