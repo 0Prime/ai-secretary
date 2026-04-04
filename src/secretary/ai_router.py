@@ -84,6 +84,56 @@ class OllamaProvider(BaseAIProvider):
         return response.data[0].embedding
 
 
+class SiliconFlowProvider(BaseAIProvider):
+    def __init__(self, api_key: str | None = None, model: str = "Qwen/Qwen2.5-32B-Instruct"):
+        self.client = OpenAI(
+            api_key=api_key,
+            base_url="https://api.siliconflow.cn/v1"
+        )
+        self.model = model
+
+    def complete(self, prompt: str, **kwargs) -> str:
+        response = self.client.chat.completions.create(
+            model=kwargs.get("model", self.model),
+            messages=[{"role": "user", "content": prompt}],
+            temperature=kwargs.get("temperature", 0.7),
+            max_tokens=kwargs.get("max_tokens", 4096),
+        )
+        return response.choices[0].message.content
+
+    def embed(self, text: str) -> list[float]:
+        response = self.client.embeddings.create(
+            model="BAAI/bge-m3",
+            input=text,
+        )
+        return response.data[0].embedding
+
+
+class ZhipuProvider(BaseAIProvider):
+    def __init__(self, api_key: str | None = None, model: str = "glm-4-flash"):
+        self.client = OpenAI(
+            api_key=api_key,
+            base_url="https://open.bigmodel.cn"
+        )
+        self.model = model
+
+    def complete(self, prompt: str, **kwargs) -> str:
+        response = self.client.chat.completions.create(
+            model=kwargs.get("model", self.model),
+            messages=[{"role": "user", "content": prompt}],
+            temperature=kwargs.get("temperature", 0.7),
+            max_tokens=kwargs.get("max_tokens", 4096),
+        )
+        return response.choices[0].message.content
+
+    def embed(self, text: str) -> list[float]:
+        response = self.client.embeddings.create(
+            model="embedding-3",
+            input=text,
+        )
+        return response.data[0].embedding
+
+
 class AIRouter:
     def __init__(self):
         self.providers: dict[str, BaseAIProvider] = {}
@@ -98,6 +148,16 @@ class AIRouter:
         if settings.anthropic_api_key:
             self.providers["anthropic"] = AnthropicProvider(
                 api_key=settings.anthropic_api_key
+            )
+        
+        if settings.siliconflow_api_key:
+            self.providers["siliconflow"] = SiliconFlowProvider(
+                api_key=settings.siliconflow_api_key
+            )
+        
+        if settings.zhipu_api_key:
+            self.providers["zhipu"] = ZhipuProvider(
+                api_key=settings.zhipu_api_key
             )
         
         self.providers["ollama"] = OllamaProvider(

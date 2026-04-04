@@ -23,6 +23,8 @@ class Settings(BaseSettings):
     
     openai_api_key: str | None = Field(default=None, alias="OPENAI_API_KEY")
     anthropic_api_key: str | None = Field(default=None, alias="ANTHROPIC_API_KEY")
+    siliconflow_api_key: str | None = Field(default=None, alias="SILICONFLOW_API_KEY")
+    zhipu_api_key: str | None = Field(default=None, alias="ZHIPU_API_KEY")
     ollama_base_url: str = Field(default="http://localhost:11434", alias="OLLAMA_BASE_URL")
     
     default_ai_provider: str = Field(default="ollama")
