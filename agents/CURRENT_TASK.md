@@ -49,10 +49,11 @@ AI Secretary for managing a knowledge base in Obsidian. The Secretary should:
 
 1. ✅ Test Chinese AI APIs (SiliconFlow ✅, Zhipu AI ✅)
 
-2. **Agentic Chain Research**
-   - Compare single-prompt vs chain approach
-   - Document findings
-   - Implement if quality improves
+2. ✅ Agentic Chain Research
+   - Tested with Zhipu GLM-4-flash
+   - Single prompt sufficient for large models
+   - Chain may help small models
+   - Documented in docs/research/
 
 3. **Brotab Integration**
    - Add-from-tabs command

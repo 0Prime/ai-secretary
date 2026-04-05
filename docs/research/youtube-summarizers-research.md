@@ -313,12 +313,33 @@ Consider:
 
 ## Open Questions / Research Needed
 
-- [ ] Test agentic chain vs single prompt with same model
+- [x] Test agentic chain vs single prompt with same model
 - [ ] Optimal number of steps in chain
 - [ ] Best models for each chain step
 - [ ] Caching strategies for intermediate results
-- [ ] Chinese model quality for summarization
+- [x] Chinese model quality for summarization (✅ Good: Zhipu GLM-4-flash tested)
 - [ ] Cost/quality tradeoff analysis
+
+### Test Results (2026-04-05)
+
+**Tested with:** Zhipu GLM-4-flash on 3Blue1Brown neural networks video
+
+**Single Prompt:**
+- ✅ More structured output
+- ✅ Follows format better
+- ⚠️ May miss detailed facts
+- Speed: ~3s
+
+**Agentic Chain:**
+- ✅ Better fact extraction
+- ✅ Organized by themes
+- ⚠️ Final output verbose, needs strict format
+- Speed: ~9s (3 steps)
+
+**Recommendation:**
+- Large models (GPT-4, GLM-4): Single prompt is sufficient
+- Small models (llama3.2:1b): Agentic chain may help
+- For comparisons: Always include key differences
 
 ## Resources
 

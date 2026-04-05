@@ -238,11 +238,11 @@ ollama serve
 
 ## Open Questions
 
-- [ ] Does Zhipu AI work from Russia?
-- [ ] Does SiliconFlow work from Russia?
+- [x] Does Zhipu AI work from Russia? ✅ Yes (GLM-4, GLM-4-flash)
+- [x] Does SiliconFlow work from Russia? ✅ Yes, but no balance
 - [ ] Can DeepSeek be paid with crypto?
 - [ ] Are there other Chinese providers?
-- [ ] What's the quality of Chinese summarization?
+- [x] What's the quality of Chinese summarization? ✅ Good (tested)
 
 ## Contributing
 
