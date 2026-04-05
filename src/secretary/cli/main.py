@@ -434,6 +434,60 @@ def related(
 
 
 @app.command()
+def compare(
+    item1: str = typer.Argument(..., help="First item to compare"),
+    item2: str = typer.Argument(..., help="Second item to compare"),
+    criteria: Optional[str] = typer.Option(None, "--criteria", "-c", help="Comparison criteria"),
+):
+    """Compare two items (tools, approaches, products, etc.)."""
+    from secretary.ai_router import AIRouter
+    router = AIRouter()
+    
+    prompt = f"""Compare these two items:
+
+{item1} vs {item2}
+
+{f'Criteria: {criteria}' if criteria else 'Compare on: features, pros, cons, use cases.'}
+
+Provide a clear comparison table and summary."""
+
+    with console.status("[cyan]Analyzing...[/cyan]"):
+        result, provider = router.complete_with_fallback(prompt)
+    
+    console.print(Panel(result, title=f"{item1} vs {item2}"))
+
+
+@app.command()
+def research(
+    topic: str = typer.Argument(..., help="Topic to research"),
+    depth: str = typer.Option("brief", "--depth", "-d", help="brief, medium, or detailed"),
+):
+    """Research a topic and provide key insights."""
+    from secretary.ai_router import AIRouter
+    router = AIRouter()
+    
+    depth_instructions = {
+        "brief": "Provide 3-5 key points in 100 words.",
+        "medium": "Provide 5-7 key points with brief explanations in 300 words.",
+        "detailed": "Provide comprehensive overview in 600 words with examples.",
+    }
+    
+    prompt = f"""Research: {topic}
+
+{depth_instructions.get(depth, depth_instructions['brief'])}
+
+Format:
+- Key points
+- Main takeaways
+- Practical applications"""
+
+    with console.status(f"[cyan]Researching {topic}...[/cyan]"):
+        result, provider = router.complete_with_fallback(prompt)
+    
+    console.print(Panel(result, title=f"Research: {topic}"))
+
+
+@app.command()
 def ask(
     query: str = typer.Argument(..., help="Question to ask AI agent"),
     provider: Optional[str] = typer.Option(
