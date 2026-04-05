@@ -249,43 +249,82 @@ def add_from_tabs(
         None, "--filter", "-f", help="Filter URL pattern"
     ),
 ):
+    added = 0
+    
+    # Try brotab first
     try:
         result = subprocess.run(
-            ["bt", "list"],
+            ["python", "-c", "from brotab.main import main; main()", "--", "list"],
             capture_output=True,
             text=True,
+            timeout=10,
         )
         
-        if result.returncode != 0:
-            console.print("[red]Error running brotab. Is it installed?[/red]")
-            console.print("Install: pip install brotab")
-            console.print("Then install browser extension from https://github.com/balta2ar/brotab")
-            return
+        if result.returncode == 0 and result.stdout.strip():
+            lines = result.stdout.strip().split('\n')
+            
+            for line in lines:
+                if '\t' in line:
+                    tab_id, url, title = line.split('\t', 2)
+                    
+                    if filter_pattern and filter_pattern not in url:
+                        continue
+                    
+                    if 'youtube.com' in url or 'youtu.be' in url:
+                        try:
+                            manager.add_material(url, MaterialType.VIDEO, title)
+                            added += 1
+                            console.print(f"[green]+[/green] {title[:50]}")
+                        except ValueError:
+                            console.print(f"[yellow]├[/yellow] Already exists: {title[:40]}")
+            
+            if added > 0:
+                console.print(f"\n[green]Added {added} videos from brotab tabs[/green]")
+                return
+    except Exception as e:
+        pass
+    
+    # Fallback: try browser_history
+    try:
+        import browser_history
+        from browser_history.browsers import Chrome, Firefox
         
-        lines = result.stdout.strip().split('\n')
-        added = 0
-        
-        for line in lines:
-            if '\t' in line:
-                tab_id, url, title = line.split('\t', 2)
+        for browser_cls in [Chrome, Firefox]:
+            try:
+                browser = browser_cls()
+                history = browser.fetch_history()
+                histories = history.histories
                 
-                if filter_pattern and filter_pattern not in url:
-                    continue
+                seen = set()
+                for h in histories:
+                    url = h[1]
+                    if url in seen:
+                        continue
+                    seen.add(url)
+                    
+                    if filter_pattern and filter_pattern not in url:
+                        continue
+                    
+                    if 'youtube.com' in url or 'youtu.be' in url:
+                        title = url
+                        try:
+                            manager.add_material(url, MaterialType.VIDEO, title)
+                            added += 1
+                            console.print(f"[green]+[/green] {url[:50]}")
+                        except ValueError:
+                            pass
                 
-                if 'youtube.com' in url or 'youtu.be' in url:
-                    try:
-                        manager.add_material(url, MaterialType.VIDEO, title)
-                        added += 1
-                        console.print(f"[green]+[/green] {title[:50]}")
-                    except ValueError:
-                        console.print(f"[yellow]┬╖[/yellow] Already exists: {title[:40]}")
-        
-        console.print(f"\n[green]Added {added} videos from tabs[/green]")
-        
-    except FileNotFoundError:
-        console.print("[red]brotab not found. Install it with:[/red]")
-        console.print("  pip install brotab")
-        console.print("  Then install browser extension")
+                if added > 0:
+                    console.print(f"\n[green]Added {added} videos from browser history[/green]")
+                    return
+            except:
+                continue
+    except ImportError:
+        pass
+    
+    console.print("[yellow]No tabs available. Options:[/yellow]")
+    console.print("  1. Install brotab browser extension: https://github.com/balta2ar/brotab")
+    console.print("  2. Or install browser-history: pip install browser-history")
 
 
 @app.command()

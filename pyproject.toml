@@ -29,6 +29,7 @@ dependencies = [
     "yt-dlp>=2024.0.0",
     "youtube-transcript-api>=0.6.2",
     "brotab>=1.1.0",
+    "browser-history>=0.5.0",
     "click>=8.1.0",
     "tenacity>=8.2.0",
     "tiktoken>=0.5.0",

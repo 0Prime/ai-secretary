@@ -55,9 +55,9 @@ AI Secretary for managing a knowledge base in Obsidian. The Secretary should:
    - Chain may help small models
    - Documented in docs/research/
 
-3. **Brotab Integration**
-   - Add-from-tabs command
-   - Browser tab parsing
+3. ✅ Brotab Integration
+   - Added browser-history fallback
+   - Supports Chrome and Firefox
 
 ## Known Issues
 
