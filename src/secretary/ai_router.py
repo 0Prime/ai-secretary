@@ -113,7 +113,7 @@ class ZhipuProvider(BaseAIProvider):
     def __init__(self, api_key: str | None = None, model: str = "glm-4-flash"):
         self.client = OpenAI(
             api_key=api_key,
-            base_url="https://open.bigmodel.cn"
+            base_url="https://open.bigmodel.cn/api/paas/v4"
         )
         self.model = model
 
