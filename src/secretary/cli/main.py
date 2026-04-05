@@ -360,6 +360,62 @@ def search(
 
 
 @app.command()
+def ask(
+    query: str = typer.Argument(..., help="Question to ask AI agent"),
+    provider: Optional[str] = typer.Option(
+        None,
+        "--provider",
+        "-p",
+        help="AI provider (auto-selects best if not specified)"
+    ),
+):
+    """Ask AI agent a question. Auto-selects best available provider."""
+    from secretary.ai_router import AIRouter
+    router = AIRouter()
+    
+    with console.status(f"[cyan]Thinking...[/cyan]"):
+        try:
+            result, used_provider = router.complete_with_fallback(
+                query,
+                preferred_provider=provider
+            )
+            console.print(f"[green]Provider:[/green] {used_provider}\n")
+            console.print(result)
+        except Exception as e:
+            console.print(f"[red]Error:[/red] {e}")
+
+
+@app.command()
+def providers(
+    show_all: bool = typer.Option(
+        False,
+        "--all",
+        help="Show all providers even if not working"
+    ),
+):
+    """Show available AI providers."""
+    from secretary.ai_router import AIRouter
+    router = AIRouter()
+    
+    if show_all:
+        console.print("[cyan]All configured providers:[/cyan]")
+        for name in router.provider_priority:
+            status = "[green]OK[/green]" if name in router.providers else "[red]MISSING[/red]"
+            console.print(f"  {status} {name}")
+    else:
+        available = router.get_available_providers()
+        best = router.get_best_provider()
+        
+        console.print("[cyan]Available providers:[/cyan]")
+        for p in available:
+            marker = " <- best" if p == best else ""
+            console.print(f"  [green]OK[/green] {p}{marker}")
+        
+        if not available:
+            console.print("[red]No providers available![/red]")
+
+
+@app.command()
 def init():
     console.print("[cyan]Initializing Secretary database...[/cyan]")
     

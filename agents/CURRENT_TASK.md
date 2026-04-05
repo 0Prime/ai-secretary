@@ -31,6 +31,15 @@
 2. **AI Agents** - handle complex queries, research, comparisons
 3. **Code only for** - token-heavy operations (parsing, embeddings, novelty scoring)
 
+**Agent Requirements:**
+- **Free** - no paid API calls
+- **Open source CLI** - Ollama, local models
+- **Intelligent routing** - automatically select best available provider:
+  1. Ollama local (free, private, fast)
+  2. Zhipu AI (free tier, Chinese)
+  3. SiliconFlow (free tier, if has balance)
+  4. Fallback: nearest working provider
+
 **No-code path:** User → AI Agent → Obsidian (via API)
 
 ### Current Sprint

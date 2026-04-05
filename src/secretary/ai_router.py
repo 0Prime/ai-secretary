@@ -138,6 +138,15 @@ class AIRouter:
     def __init__(self):
         self.providers: dict[str, BaseAIProvider] = {}
         self._init_providers()
+        
+        # Priority order for auto-selection (free first)
+        self.provider_priority = [
+            "ollama",      # Free, local, private
+            "zhipu",       # Free tier, Chinese
+            "siliconflow", # Free tier (if has balance)
+            "openai",      # Paid fallback
+            "anthropic",   # Paid fallback
+        ]
 
     def _init_providers(self):
         if settings.openai_api_key:
@@ -165,23 +174,85 @@ class AIRouter:
             model=settings.ollama_model
         )
 
+    def get_available_providers(self) -> list[str]:
+        """Return list of working providers."""
+        available = []
+        for name in self.provider_priority:
+            if name in self.providers:
+                try:
+                    # Quick health check - simple completion
+                    self.providers[name].complete("hi", max_tokens=5)
+                    available.append(name)
+                except Exception:
+                    continue
+        return available
+
+    def get_best_provider(self) -> str:
+        """Auto-select best available provider (free first)."""
+        available = self.get_available_providers()
+        
+        if not available:
+            raise RuntimeError("No AI providers available")
+        
+        # Return highest priority available
+        for name in self.provider_priority:
+            if name in available:
+                return name
+        
+        return available[0]
+
     def complete(
         self,
         prompt: str,
         provider: str | None = None,
         **kwargs
     ) -> str:
+        # Auto-select if no provider specified
         if provider is None:
-            provider = settings.default_ai_provider
+            provider = self.get_best_provider()
         
         if provider not in self.providers:
             raise ValueError(f"Provider '{provider}' not available")
         
         return self.providers[provider].complete(prompt, **kwargs)
 
+    def complete_with_fallback(
+        self,
+        prompt: str,
+        preferred_provider: str | None = None,
+        **kwargs
+    ) -> tuple[str, str]:
+        """Try preferred provider, fallback to others if fails.
+        
+        Returns: (result, provider_name)
+        """
+        # Build fallback order
+        if preferred_provider and preferred_provider in self.providers:
+            providers_to_try = [preferred_provider] + [
+                p for p in self.provider_priority 
+                if p in self.providers and p != preferred_provider
+            ]
+        else:
+            providers_to_try = [
+                p for p in self.provider_priority 
+                if p in self.providers
+            ]
+        
+        last_error = None
+        for provider_name in providers_to_try:
+            try:
+                result = self.providers[provider_name].complete(prompt, **kwargs)
+                return result, provider_name
+            except Exception as e:
+                last_error = e
+                continue
+        
+        raise RuntimeError(f"All providers failed. Last error: {last_error}")
+
     def embed(self, text: str, provider: str | None = None) -> list[float]:
+        # Auto-select if no provider specified
         if provider is None:
-            provider = settings.default_ai_provider
+            provider = self.get_best_provider()
         
         if provider not in self.providers:
             raise ValueError(f"Provider '{provider}' not available")
