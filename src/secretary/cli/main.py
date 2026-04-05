@@ -248,6 +248,9 @@ def add_from_tabs(
     filter_pattern: Optional[str] = typer.Option(
         None, "--filter", "-f", help="Filter URL pattern"
     ),
+    browser: Optional[str] = typer.Option(
+        None, "--browser", "-b", help="Browser: chrome, firefox, opera"
+    ),
 ):
     added = 0
     
@@ -287,9 +290,20 @@ def add_from_tabs(
     # Fallback: try browser_history
     try:
         import browser_history
-        from browser_history.browsers import Chrome, Firefox
+        from browser_history.browsers import Chrome, Firefox, Opera
         
-        for browser_cls in [Chrome, Firefox]:
+        browsers_to_try = []
+        if browser:
+            if browser.lower() == 'opera':
+                browsers_to_try = [Opera]
+            elif browser.lower() == 'chrome':
+                browsers_to_try = [Chrome]
+            elif browser.lower() == 'firefox':
+                browsers_to_try = [Firefox]
+        else:
+            browsers_to_try = [Opera, Chrome, Firefox]
+        
+        for browser_cls in browsers_to_try:
             try:
                 browser = browser_cls()
                 history = browser.fetch_history()
@@ -315,16 +329,119 @@ def add_from_tabs(
                             pass
                 
                 if added > 0:
-                    console.print(f"\n[green]Added {added} videos from browser history[/green]")
+                    console.print(f"\n[green]Added {added} videos from {browser_cls.__name__}[/green]")
                     return
-            except:
+            except Exception as e:
+                # Custom Opera handling - try direct SQLite read
+                if browser_cls.__name__ == 'Opera' or (browser and browser.lower() == 'opera'):
+                    added += _add_from_opera_history(filter_pattern)
+                    if added > 0:
+                        console.print(f"\n[green]Added {added} videos from Opera[/green]")
+                        return
                 continue
     except ImportError:
         pass
     
+    # Last resort: try direct Opera SQLite
+    if not added:
+        added += _add_from_opera_history(filter_pattern)
+        if added > 0:
+            console.print(f"\n[green]Added {added} videos from Opera[/green]")
+            return
+    
     console.print("[yellow]No tabs available. Options:[/yellow]")
-    console.print("  1. Install brotab browser extension: https://github.com/balta2ar/brotab")
-    console.print("  2. Or install browser-history: pip install browser-history")
+    console.print("  1. Install brotab: pip install brotab")
+    console.print("     Then install browser extension")
+    console.print("  2. Or use --browser opera/chrome/firefox")
+
+
+def _add_from_opera_history(filter_pattern: str = None) -> int:
+    """Read YouTube URLs directly from Opera history SQLite."""
+    import sqlite3
+    import shutil
+    import tempfile
+    import os
+    
+    added = 0
+    
+    # Try multiple possible paths
+    opera_paths = [
+        r'C:\Users\prime\AppData\Roaming\Opera Software\Opera Stable\Default\History',
+        os.path.expandvars('%APPDATA%\\Opera Software\\Opera Stable\\Default\\History'),
+    ]
+    
+    history_path = None
+    for p in opera_paths:
+        if os.path.exists(p):
+            history_path = p
+            break
+    
+    if not history_path:
+        return 0
+    
+    # Try to copy the file (to avoid lock)
+    temp_db = None
+    try:
+        temp_dir = tempfile.gettempdir()
+        temp_db = os.path.join(temp_dir, 'opera_history_temp.db')
+        shutil.copy2(history_path, temp_db)
+    except:
+        # If copy fails, try direct read
+        temp_db = history_path
+    
+    try:
+        conn = sqlite3.connect(temp_db, timeout=1)
+        cursor = conn.cursor()
+        
+        cursor.execute('''
+            SELECT DISTINCT url 
+            FROM urls 
+            WHERE url LIKE '%youtube.com%' OR url LIKE '%youtu.be%'
+            ORDER BY last_visit_time DESC
+            LIMIT 50
+        ''')
+        
+        seen = set()
+        for row in cursor.fetchall():
+            url = row[0]
+            if url in seen:
+                continue
+            
+            # Normalize URL
+            if 'v=' in url:
+                vid = url.split('v=')[1].split('&')[0]
+                url = f'https://youtube.com/watch?v={vid}'
+            elif 'youtu.be/' in url:
+                vid = url.split('youtu.be/')[1].split('?')[0]
+                url = f'https://youtube.com/watch?v={vid}'
+            else:
+                continue
+            
+            if url in seen:
+                continue
+            seen.add(url)
+            
+            if filter_pattern and filter_pattern not in url:
+                continue
+            
+            try:
+                manager.add_material(url, MaterialType.VIDEO, url)
+                added += 1
+                console.print(f"[green]+[/green] {url[:60]}")
+            except ValueError:
+                pass
+        
+        conn.close()
+    except Exception as e:
+        pass
+    finally:
+        if temp_db and temp_db != history_path and os.path.exists(temp_db):
+            try:
+                os.remove(temp_db)
+            except:
+                pass
+    
+    return added
 
 
 @app.command()

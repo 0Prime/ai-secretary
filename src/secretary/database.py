@@ -38,19 +38,24 @@ class MaterialDB(Base):
         
         video_metadata = None
         if self.video_metadata_json:
-            vm_dict = json.loads(self.video_metadata_json)
-            chapters = [
-                VideoChapter(time=ch["time"], title=ch["title"])
-                for ch in vm_dict.get("chapters", [])
-            ]
-            video_metadata = VideoMetadata(
-                channel=vm_dict.get("channel"),
-                views=vm_dict.get("views"),
-                likes=vm_dict.get("likes"),
-                transcript=vm_dict.get("transcript"),
-                chapters=chapters,
-                duration=vm_dict.get("duration"),
-            )
+            try:
+                # Handle both string and already-parsed JSON
+                vm_dict = self.video_metadata_json if isinstance(self.video_metadata_json, dict) else json.loads(self.video_metadata_json)
+                if vm_dict:
+                    chapters = [
+                        VideoChapter(time=ch["time"], title=ch["title"])
+                        for ch in vm_dict.get("chapters", [])
+                    ]
+                    video_metadata = VideoMetadata(
+                        channel=vm_dict.get("channel"),
+                        views=vm_dict.get("views"),
+                        likes=vm_dict.get("likes"),
+                        transcript=vm_dict.get("transcript"),
+                        chapters=chapters,
+                        duration=vm_dict.get("duration"),
+                    )
+            except (json.JSONDecodeError, TypeError):
+                pass
         
         return Material(
             id=self.id,
@@ -187,7 +192,11 @@ class Database:
                 text_parts = [m.title]
                 if m.summary:
                     text_parts.append(m.summary)
-                tags = json.loads(m.tags_json) if m.tags_json else []
+                # Handle both string and list types
+                if isinstance(m.tags_json, list):
+                    tags = m.tags_json
+                else:
+                    tags = json.loads(m.tags_json) if m.tags_json else []
                 text_parts.extend(tags)
                 summaries.append(" ".join(text_parts))
             return summaries
