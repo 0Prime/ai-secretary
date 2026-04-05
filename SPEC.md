@@ -58,17 +58,17 @@
 
 ### Priority Order
 
-1. **Ollama (local)** ΓÇö Γ£à Working
-   - `llama3.2:1b` ΓÇö current default (~2.8s, 1.3 GB)
-   - `phi3:latest` ΓÇö downloaded (~7.7s, 2.2 GB)
-   - `nomic-embed-text` ΓÇö for embeddings
+1. **Ollama (local)** ✅ Working
+   - `llama3.2:1b` — current default (~2.8s, 1.3 GB)
+   - `phi3:latest` — downloaded (~7.7s, 2.2 GB)
+   - `nomic-embed-text` — for embeddings
 
-2. **Chinese APIs** ΓÇö ≡ƒö¼ Testing
-   - **SiliconFlow** ΓÇö free tier, Qwen/DeepSeek models
-   - **Zhipu AI** ΓÇö free tier, GLM models
-   - **DeepSeek** ΓÇö cheap, needs Alipay payment
+2. **Chinese APIs** ✅ Tested
+   - **Zhipu AI** ✅ Working (GLM-4, GLM-4-flash)
+   - **SiliconFlow** ⚠️ Works but no balance
+   - **DeepSeek** ❌ Needs Alipay payment
 
-3. **Cloud APIs** ΓÇö ≡ƒöä Planned
+3. **Cloud APIs** 🔲 Not needed yet
    - OpenAI (expensive)
    - Anthropic (expensive)
 
@@ -397,15 +397,14 @@ See `docs/research/` for:
 
 ---
 
-## Roadmap (Updated 2026-04-04)
+## Roadmap (Updated 2026-04-05)
 
 | Priority | Task | Status |
 |----------|------|--------|
-| ≡ƒö┤ | Setup GitHub repo | Next |
-| ≡ƒö┤ | Test Chinese APIs (SiliconFlow, Zhipu) | Pending |
-| ≡ƒö┤ | Review SPEC and update | In Progress |
-| ≡ƒƒí | Brotab integration | Backlog |
-| ≡ƒƒí | ChromaDB for embeddings | Backlog |
-| ≡ƒƒí | Agentic summarization chain | Research |
-| ≡ƒƒó | Learning planner | Backlog |
-| ≡ƒƒó | Obsidian plugin | Backlog |
+| Done | Setup GitHub repo | Done |
+| Done | Test Chinese APIs (Zhipu AI) | Done |
+| Done | Brotab + browser-history integration | Done |
+| Done | Agentic chain research | Done |
+| Backlog | ChromaDB for embeddings | Backlog |
+| Backlog | Learning planner | Backlog |
+| Backlog | Obsidian plugin | Backlog |
