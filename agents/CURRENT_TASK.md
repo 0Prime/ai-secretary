@@ -40,7 +40,7 @@ AI Secretary for managing a knowledge base in Obsidian. The Secretary should:
 - Added Chinese AI providers (SiliconFlow, Zhipu AI) and tested
 
 ### In Progress
-- Agentic Chain Research
+- SPEC.md review
 
 ### Blocked
 - None
