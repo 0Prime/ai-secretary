@@ -96,8 +96,23 @@
 - [x] Obsidian plugin development (button functionality)
 - [x] AI agent prompt engineering
 - [x] Intelligent provider auto-selection with fallback
+- [x] Knowledge base queries (query, recommend, related commands)
+- [x] AI agent commands (ask, compare, research)
 - [ ] Obsidian API integration
-- [ ] Compare: local Ollama vs API agents
+
+## CLI Commands Available
+
+| Command | Description |
+|---------|-------------|
+| `ask <question>` | Ask AI agent (auto-selects provider) |
+| `compare <a> <b>` | Compare two items |
+| `research <topic>` | Research a topic |
+| `query <text>` | Search knowledge base |
+| `recommend` | Get learning recommendations |
+| `providers` | Show available AI providers |
+| `add <url>` | Add material |
+| `analyze <id>` | Analyze material |
+| `learn <id>` | Mark as learned |
 
 ## Known Issues
 
