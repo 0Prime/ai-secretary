@@ -98,7 +98,8 @@
 - [x] Intelligent provider auto-selection with fallback
 - [x] Knowledge base queries (query, recommend, related commands)
 - [x] AI agent commands (ask, compare, research)
-- [ ] Obsidian API integration
+- [x] Obsidian API integration
+- [x] API server for external apps
 
 ## CLI Commands Available
 
@@ -113,6 +114,14 @@
 | `add <url>` | Add material |
 | `analyze <id>` | Analyze material |
 | `learn <id>` | Mark as learned |
+| `secretary api` | Start API server |
+
+## Obsidian Plugin Features
+
+- Ribbon icon with quick actions menu
+- Command Palette commands
+- Modal dialogs for AI queries
+- Integration with CLI backend
 
 ## Known Issues
 
