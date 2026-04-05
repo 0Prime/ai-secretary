@@ -1,0 +1,11 @@
+{
+  "id": "ai-secretary",
+  "name": "AI Secretary",
+  "version": "0.1.0",
+  "description": "AI-powered knowledge base assistant with AI agent, video analysis, and learning recommendations",
+  "author": "AI Secretary Team",
+  "authorUrl": "https://github.com/0Prime/ai-secretary",
+  "fundingUrl": "https://github.com/0Prime/ai-secretary",
+  "isDesktopOnly": true,
+  "minAppVersion": "0.15.0"
+}
