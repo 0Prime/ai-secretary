@@ -27,7 +27,7 @@ AI Secretary for managing a knowledge base in Obsidian. The Secretary should:
 3. ✅ CLI commands: add, analyze, learn, sync, status
 4. ✅ Obsidian vault sync
 5. ✅ GitHub repository setup on GitHub
-6. 🔄 Research: Chinese AI APIs for Russia
+6. ✅ Research: Chinese AI APIs for Russia
 7. ⏳ SPEC.md review
 
 ### Completed This Session
@@ -37,26 +37,24 @@ AI Secretary for managing a knowledge base in Obsidian. The Secretary should:
 - Database fixes for tag persistence
 - Proxy auto-detection implemented
 - GitHub repository created and pushed
+- Added Chinese AI providers (SiliconFlow, Zhipu AI) and tested
 
 ### In Progress
-- Research: Chinese AI APIs testing
+- Agentic Chain Research
 
 ### Blocked
 - None
 
 ## Next Steps (Priority Order)
 
-1. **Test Chinese AI APIs**
-   - SiliconFlow (free tier)
-   - Zhipu AI (free tier)
-   - DeepSeek (cheap, needs Alipay)
+1. ✅ Test Chinese AI APIs (SiliconFlow ✅, Zhipu AI ✅)
 
-3. **Agentic Chain Research**
+2. **Agentic Chain Research**
    - Compare single-prompt vs chain approach
    - Document findings
    - Implement if quality improves
 
-4. **Brotab Integration**
+3. **Brotab Integration**
    - Add-from-tabs command
    - Browser tab parsing
 
