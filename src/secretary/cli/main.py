@@ -360,6 +360,80 @@ def search(
 
 
 @app.command()
+def query(
+    query_text: str = typer.Argument(..., help="Query to search in knowledge base"),
+    limit: int = typer.Option(5, "--limit", "-n", help="Number of results"),
+):
+    """Query your knowledge base for learned materials."""
+    from secretary.material_manager import MaterialManager
+    mgr = MaterialManager()
+    
+    results = mgr.query_knowledge_base(query_text, limit=limit)
+    
+    if not results:
+        console.print("[yellow]No matching materials found in knowledge base[/yellow]")
+        return
+    
+    console.print(f"[green]Found {len(results)} related materials:[/green]\n")
+    
+    for m in results:
+        console.print(f"[cyan]{m.title[:60]}[/cyan]")
+        if m.tags:
+            console.print(f"  Tags: {', '.join(m.tags[:5])}")
+        if m.novelty_score is not None:
+            console.print(f"  Novelty: {m.novelty_score:.2f}")
+        console.print()
+
+
+@app.command()
+def recommend(
+    limit: int = typer.Option(5, "--limit", "-n", help="Number of recommendations"),
+):
+    """Get recommended materials to learn next."""
+    from secretary.material_manager import MaterialManager
+    mgr = MaterialManager()
+    
+    results = mgr.get_learning_recommendations(limit=limit)
+    
+    if not results:
+        console.print("[yellow]No pending materials to recommend[/yellow]")
+        console.print("Try: secretary add <url>")
+        return
+    
+    console.print(f"[green]Recommended materials (by novelty):[/green]\n")
+    
+    for m in results:
+        rec = mgr.get_novelty_recommendation(m.id)
+        console.print(f"[cyan]{m.title[:60]}[/cyan]")
+        console.print(f"  Novelty: {m.novelty_score:.2f} | Recommendation: {rec}")
+        console.print()
+
+
+@app.command()
+def related(
+    material_id: str = typer.Argument(..., help="Material ID to find related"),
+    limit: int = typer.Option(5, "--limit", "-n", help="Number of related items"),
+):
+    """Find related materials by tags."""
+    from secretary.material_manager import MaterialManager
+    mgr = MaterialManager()
+    
+    results = mgr.find_relatedMaterials(material_id, limit=limit)
+    
+    if not results:
+        console.print("[yellow]No related materials found[/yellow]")
+        return
+    
+    console.print(f"[green]Related materials:[/green]\n")
+    
+    for m in results:
+        common = set(m.tags or []) & set(results[0].tags or []) if results else set()
+        console.print(f"[cyan]{m.title[:60]}[/cyan]")
+        console.print(f"  Common tags: {', '.join(common)}")
+        console.print()
+
+
+@app.command()
 def ask(
     query: str = typer.Argument(..., help="Question to ask AI agent"),
     provider: Optional[str] = typer.Option(

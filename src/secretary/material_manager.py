@@ -40,6 +40,71 @@ class MaterialManager:
         self.db = db
         self.ai = ai_router
 
+    def query_knowledge_base(self, query: str, limit: int = 10) -> list[Material]:
+        """Search learned materials for query."""
+        learned = self.db.get_materials(status=MaterialStatus.LEARNED.value, limit=100)
+        
+        if not learned:
+            return []
+        
+        # Get summaries for embedding search
+        summaries = []
+        for m in learned:
+            if m.summary:
+                summaries.append((m.id, m.title, m.summary, m.tags or []))
+        
+        if not summaries:
+            return learned[:limit]
+        
+        # Simple text search first
+        query_lower = query.lower()
+        results = []
+        for sid, title, summary, tags in summaries:
+            if query_lower in title.lower() or (summary and query_lower in summary.lower()):
+                results.append(sid)
+        
+        # Get full materials
+        return [m for m in learned if m.id in results][:limit]
+
+    def find_relatedMaterials(self, material_id: str, limit: int = 5) -> list[Material]:
+        """Find related materials based on tags."""
+        material = self.db.get_material(material_id)
+        if not material or not material.tags:
+            return []
+        
+        learned = self.db.get_materials(status=MaterialStatus.LEARNED.value, limit=100)
+        
+        related = []
+        for m in learned:
+            if m.id == material_id or not m.tags:
+                continue
+            
+            # Count matching tags
+            common = set(m.tags) & set(material.tags)
+            if common:
+                related.append((m, len(common)))
+        
+        # Sort by common tags count
+        related.sort(key=lambda x: x[1], reverse=True)
+        
+        return [r[0] for r in related[:limit]]
+
+    def get_learning_recommendations(self, limit: int = 5) -> list[Material]:
+        """Get recommended materials to learn next."""
+        pending = self.db.get_materials(status=MaterialStatus.PENDING.value, limit=20)
+        
+        if not pending:
+            return []
+        
+        # Sort by novelty score (highest first)
+        sorted_pending = sorted(
+            [m for m in pending if m.novelty_score is not None],
+            key=lambda x: x.novelty_score,
+            reverse=True
+        )
+        
+        return sorted_pending[:limit]
+
     def add_material(
         self,
         source: str,
