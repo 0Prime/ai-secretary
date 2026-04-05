@@ -4,22 +4,36 @@
 
 **Status:** Active Development  
 **Started:** 2026-04-04  
-**Last Updated:** 2026-04-04
+**Last Updated:** 2026-04-05
 
-## Project Overview
+## Video Analysis: ZProger - AI Secretary Concept
 
-AI Secretary for managing a knowledge base in Obsidian. The Secretary should:
-- Manage a knowledge base, add tags to materials, track studied materials
-- Summarize videos
-- Compare with already studied topics and find new content
-- Fill knowledge base with studied materials and future study materials
-- Study the internet (Google, YouTube) for new knowledge on topics
-- Plan learning trajectory
-- Find materials for next learning steps
-- Reindex all unstudied materials after each studied material
-- Index novelty of material considering already studied materials
+**Video:** https://www.youtube.com/watch?v=6BW4lo7f71I
+**Channel:** ZProger [ IT ]
+**Duration:** 13 min (801 sec)
 
-## Current Sprint
+### Key Insights from Video
+
+**3 Problems Solved:**
+1. **Duplicate content** - 20 videos = same 20% info → extract only unique
+2. **Book redundancy** - 5-10 books/year contain known info → AI checks what you know
+3. **Product research** - weeks to compare products → AI does in 15 min
+
+**Tools Mentioned:**
+- Obsidian - knowledge base
+- Gemini - AI for search/processing
+- LM (Local Model) - local AI for checking knowledge
+
+### New Architecture Vision
+
+**Hybrid Approach:**
+1. **Button functionality** - quick actions (mark watched, add material)
+2. **AI Agents** - handle complex queries, research, comparisons
+3. **Code only for** - token-heavy operations (parsing, embeddings, novelty scoring)
+
+**No-code path:** User → AI Agent → Obsidian (via API)
+
+### Current Sprint
 
 ### Goals (Sprint 1)
 1. ✅ Basic video analysis working (YouTube video → summary, tags, novelty)
@@ -28,7 +42,7 @@ AI Secretary for managing a knowledge base in Obsidian. The Secretary should:
 4. ✅ Obsidian vault sync
 5. ✅ GitHub repository setup on GitHub
 6. ✅ Research: Chinese AI APIs for Russia
-7. ⏳ SPEC.md review
+7. ✅ SPEC.md review
 
 ### Completed This Session
 - Video analysis with new structured prompts
@@ -38,26 +52,42 @@ AI Secretary for managing a knowledge base in Obsidian. The Secretary should:
 - Proxy auto-detection implemented
 - GitHub repository created and pushed
 - Added Chinese AI providers (SiliconFlow, Zhipu AI) and tested
+- Analyzed video that inspired the project (ZProger)
 
 ### In Progress
-- SPEC.md review
+- Define next phase based on new vision
 
 ### Blocked
 - None
 
 ## Next Steps (Priority Order)
 
-1. ✅ Test Chinese AI APIs (SiliconFlow ✅, Zhipu AI ✅)
+### New Architecture (Based on ZProger Video)
 
-2. ✅ Agentic Chain Research
-   - Tested with Zhipu GLM-4-flash
-   - Single prompt sufficient for large models
-   - Chain may help small models
-   - Documented in docs/research/
+1. **Button Functionality**
+   - Quick "mark watched" - from Obsidian UI or hotkey
+   - Quick add from clipboard
+   - Quick analyze current note
+   - Implemented via: Obsidian plugin OR hotkeys
 
-3. ✅ Brotab Integration
-   - Added browser-history fallback
-   - Supports Chrome and Firefox
+2. **AI Agent Layer**
+   - Direct queries to AI (natural language)
+   - Research tasks (find materials on topic)
+   - Comparison tasks (X vs Y)
+   - Implemented via: Claude/GPT API or local Ollama
+
+3. **Code for Token-Heavy Ops**
+   - Video parsing (yt-dlp)
+   - Transcript fetching
+   - Embeddings + novelty scoring
+   - Database operations
+
+### Research Tasks
+
+- [ ] Obsidian plugin development (button functionality)
+- [ ] AI agent prompt engineering
+- [ ] Obsidian API integration
+- [ ] Compare: local Ollama vs API agents
 
 ## Known Issues
 
