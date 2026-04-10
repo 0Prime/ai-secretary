@@ -1,199 +1,221 @@
-# AI Secretary — Specification
+﻿# AI Secretary ΓÇö ╨í╨┐╨╡╤å╨╕╤ä╨╕╨║╨░╤å╨╕╤Å
 
-> Version: v2
-> Date: 2026-04-05
-> Status: In Review
+## ╨Ü╨╛╨╜╤å╨╡╨┐╤å╨╕╤Å ╨╕ ╨Æ╨╕╨┤╨╡╨╜╨╕╨╡
 
----
+╨ÿ╨╜╤é╨╡╨╗╨╗╨╡╨║╤é╤â╨░╨╗╤î╨╜╤ï╨╣ ╤ü╨╡╨║╤Ç╨╡╤é╨░╤Ç╤î ╨┤╨╗╤Å ╤â╨┐╤Ç╨░╨▓╨╗╨╡╨╜╨╕╤Å ╨▒╨░╨╖╨╛╨╣ ╨╖╨╜╨░╨╜╨╕╨╣ ╨▓ Obsidian. ╨¥╨╡ ╨┐╤Ç╨╛╤ü╤é╨╛ ╨╕╨╜╤ü╤é╤Ç╤â╨╝╨╡╨╜╤é ╨┤╨╗╤Å ╨╖╨░╨╝╨╡╤é╨╛╨║, ╨░ **╨░╨▓╤é╨╛╨╜╨╛╨╝╨╜╤ï╨╣ ╨░╨│╨╡╨╜╤é**, ╨║╨╛╤é╨╛╤Ç╤ï╨╣:
+- ╨í╨╗╨╡╨┤╨╕╤é ╨╖╨░ ╨╜╨╛╨▓╨╕╨╖╨╜╨╛╨╣ ╨╝╨░╤é╨╡╤Ç╨╕╨░╨╗╨╛╨▓ ╨╛╤é╨╜╨╛╤ü╨╕╤é╨╡╨╗╤î╨╜╨╛ ╤â╨╢╨╡ ╨╕╨╖╤â╤ç╨╡╨╜╨╜╨╛╨│╨╛
+- ╨ƒ╨╗╨░╨╜╨╕╤Ç╤â╨╡╤é ╤é╤Ç╨░╨╡╨║╤é╨╛╤Ç╨╕╤Ä ╨╛╨▒╤â╤ç╨╡╨╜╨╕╤Å
+- ╨É╨▓╤é╨╛╨╝╨░╤é╨╕╤ç╨╡╤ü╨║╨╕ ╤ü╤â╨╝╨╝╨░╤Ç╨╕╨╖╨╕╤Ç╤â╨╡╤é ╨╕ ╤é╨╡╨│╨╕╤Ç╤â╨╡╤é ╨║╨╛╨╜╤é╨╡╨╜╤é
+- ╨¡╨║╨╛╨╜╨╛╨╝╨╕╤é ╨▓╤Ç╨╡╨╝╤Å ╨╜╨░ ╨╛╤é╤ü╨╡╨╕╨▓╨░╨╜╨╕╨╡ ╨▒╨╡╤ü╨┐╨╛╨╗╨╡╨╖╨╜╨╛╨│╨╛ ╨║╨╛╨╜╤é╨╡╨╜╤é╨░
 
-## 1. Problem Statement
-
-**What problem are we solving?**
-Users want to efficiently manage their knowledge base in Obsidian by:
-- Finding and summarizing educational videos from YouTube
-- Tracking what they've learned and identifying new content
-- Avoiding duplicate information across multiple sources
-- Getting AI assistance for research and comparisons
-
-**Who is affected?**
-- Knowledge workers using Obsidian for personal knowledge management
-- Learners who consume大量 YouTube educational content
-- Researchers tracking multiple information sources
-
-**Why now?**
-- YouTube contains vast educational content but no native Obsidian integration exists
-- Local AI models (Ollama) now provide free, private inference
-- Chinese AI APIs (Zhipu, SiliconFlow) provide free tiers accessible from Russia
+**╨ñ╨╕╨╗╨╛╤ü╨╛╤ä╨╕╤Å**: ╨£╨╕╨╜╨╕╨╝╤â╨╝ ╨┤╨╡╨╣╤ü╤é╨▓╨╕╨╣ ╨╛╤é ╨┐╨╛╨╗╤î╨╖╨╛╨▓╨░╤é╨╡╨╗╤Å ΓåÆ ╨╝╨░╨║╤ü╨╕╨╝╤â╨╝ ╤å╨╡╨╜╨╜╨╛╤ü╤é╨╕. ╨í╨╡╨║╤Ç╨╡╤é╨░╤Ç╤î ╤ü╨░╨╝ ╤Ç╨╡╤ê╨░╨╡╤é, ╤ç╤é╨╛ ╤ü╤é╨╛╨╕╤é ╨╕╨╖╤â╤ç╨░╤é╤î.
 
 ---
 
-## 2. Goals & Non-Goals
-
-### Goals
-- [ ] CLI tool for adding YouTube videos to knowledge base with one command
-- [ ] Automatic video analysis: transcript → structured summary → tags
-- [ ] Novelty scoring: compare new content against learned materials
-- [ ] Direct AI agent queries for research, comparison, and Q&A
-- [ ] Intelligent AI provider auto-selection (free first: Ollama → Zhipu → SiliconFlow)
-- [ ] Obsidian plugin for quick actions from within Obsidian
-- [ ] API server for external integrations
-
-### Non-Goals
-- [ ] Mobile app or web interface (CLI-first approach)
-- [ ] Paid AI API integration (free providers only)
-- [ ] Real-time YouTube streaming or live detection
-- [ ] Social features, sharing, or collaboration
-
----
-
-## 3. Requirements
-
-### 3.1 Functional Requirements
-
-| ID | Requirement | Priority | Testable? |
-|----|-------------|----------|-----------|
-| FR-001 | `secretary add <url>` adds material to database | Must | Yes — run command, check DB |
-| FR-002 | `secretary analyze <id>` extracts summary + tags | Must | Yes — check material fields |
-| FR-003 | `secretary learn <id>` marks material as learned | Must | Yes — check status change |
-| FR-004 | `secretary query <text>` searches learned materials | Must | Yes — run query, verify results |
-| FR-005 | `secretary recommend` returns materials sorted by novelty | Must | Yes — check sorting |
-| FR-006 | `secretary ask <question>` queries AI with auto-select | Must | Yes — verify response |
-| FR-007 | `secretary compare <a> <b>` compares two items | Should | Yes — verify comparison |
-| FR-008 | `secretary research <topic>` generates research summary | Should | Yes — verify output |
-| FR-009 | `secretary add-from-tabs` imports YouTube from browser | Should | Yes — check imported URLs |
-| FR-010 | Auto-proxy detection from Obsidian settings | Should | Yes — verify proxy usage |
-| FR-011 | Zhipu AI integration (free tier) | Must | Yes — test API call |
-| FR-012 | SiliconFlow integration (free tier) | Could | Yes — test API call |
-| FR-013 | Obsidian plugin with ribbon icon + commands | Should | Yes — test in Obsidian |
-
-### 3.2 Non-Functional Requirements
-
-| ID | Requirement | Metric | Target |
-|----|-------------|--------|--------|
-| NFR-001 | Video analysis speed | Response time | < 30s for 10-min video |
-| NFR-001 | AI query response | Response time | < 10s for simple queries |
-| NFR-002 | Database size | Materials supported | 10,000+ |
-| NFR-003 | Privacy | Data stays local | Ollama + local DB |
-| NFR-004 | Provider fallback | Auto-switch on failure | 100% uptime |
-
----
-
-## 4. User Stories / Use Cases
-
-### UC-001: Add and Analyze YouTube Video
-- **Actor:** User with CLI access
-- **Scenario:**
-  1. User runs `secretary add https://youtube.com/watch?v=...`
-  2. System fetches video metadata
-  3. User runs `secretary analyze <id>`
-  4. System gets transcript, generates summary + tags
-- **Expected Outcome:** Material has summary, tags, novelty_score
-- **Error Paths:**
-  - No transcript → use title + metadata only
-
-### UC-002: Query Knowledge Base
-- **Actor:** User asking research question
-- **Scenario:**
-  1. User runs `secretary query "neural networks"`
-  2. System searches learned materials
-  3. System returns relevant materials with summaries
-- **Expected Outcome:** List of related materials
-
-### UC-003: Get Learning Recommendations
-- **Actor:** User wanting to learn
-- **Scenario:**
-  1. User runs `secretary recommend`
-  2. System sorts pending materials by novelty
-  3. User receives prioritized learning list
-- **Expected Outcome:** Ranked list of materials
-
----
-
-## 5. Architecture / Design
-
-### 5.1 High-Level Architecture
+## ╨É╤Ç╤à╨╕╤é╨╡╨║╤é╤â╤Ç╨░ ╤ü╨╕╤ü╤é╨╡╨╝╤ï
 
 ```
-┌─────────────────────────────────────────────────────────────┐
-│                     USER INTERFACE                           │
-├─────────────────┬─────────────────┬─────────────────────────┤
-│  Obsidian       │      CLI        │   API Server            │
-│  Plugin         │   (Typer)       │   (HTTP)                │
-└────────┬────────┴────────┬────────┴────────┬────────────────┘
-         │                  │                 │
-         v                  v                 v
-┌─────────────────────────────────────────────────────────────┐
-│                     CORE (Python)                            │
-├─────────────────────────────────────────────────────────────┤
-│  AI Router ─────────────► Material Manager ─────────────► DB │
-│  (Ollama/Zhipu/SF)       (CRUD + novelty)      (SQLite)    │
-│         │                        │                          │
-│         v                        v                          │
-│  Video Analyzer ◄───────── Knowledge Base                   │
-│  (yt-dlp + transcript)     (ChromaDB - future)             │
-└─────────────────────────────────────────────────────────────┘
-         │                  │                 │
-         v                  v                 v
-┌─────────────┐  ┌─────────────┐  ┌─────────────────────────┐
-│  Obsidian   │  │   Vector DB  │  │   Browser History       │
-│  Vault      │  │  (ChromaDB)  │  │   (Opera/Chrome)        │
-└─────────────┘  └─────────────┘  └─────────────────────────┘
+ΓöîΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÉ
+Γöé                         USER INTERFACE                          Γöé
+Γö£ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö¼ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö¼ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöñ
+Γöé   Obsidian Plugin    Γöé        CLI           Γöé  Browser Extension Γöé
+ΓööΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö¼ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö┤ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö¼ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö┤ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö¼ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÿ
+           Γöé                      Γöé                      Γöé
+           ΓööΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö╝ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÿ
+                                  Γöé
+                    ΓöîΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓû╝ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÉ
+                    Γöé        CORE (Python)       Γöé
+                    Γöé  ΓöîΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÉ   Γöé
+                    Γöé  Γöé  AI Router          Γöé   Γöé
+                    Γöé  Γöé  (Ollama local ->    Γöé   Γöé
+                    Γöé  Γöé   Chinese APIs ->    Γöé   Γöé
+                    Γöé  Γöé   Cloud APIs)        Γöé   Γöé
+                    Γöé  ΓööΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÿ   Γöé
+                    Γöé  ΓöîΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÉ   Γöé
+                    Γöé  Γöé  Material Manager   Γöé   Γöé
+                    Γöé  Γöé  - indexing         Γöé   Γöé
+                    Γöé  Γöé  - deduplication    Γöé   Γöé
+                    Γöé  Γöé  - novelty scoring  Γöé   Γöé
+                    Γöé  ΓööΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÿ   Γöé
+                    Γöé  ΓöîΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÉ   Γöé
+                    Γöé  Γöé  Video Analyzer    Γöé   Γöé
+                    Γöé  Γöé  - summarization    Γöé   Γöé
+                    Γöé  Γöé  - chapter parsing  Γöé   Γöé
+                    Γöé  ΓööΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÿ   Γöé
+                    ΓööΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö¼ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÿ
+                                  Γöé
+            ΓöîΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö╝ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÉ
+            Γöé                      Γöé                      Γöé
+     ΓöîΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓû╝ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÉ       ΓöîΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓû╝ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÉ       ΓöîΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓû╝ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÉ
+     Γöé  Obsidian   Γöé       Γöé  Vector DB  Γöé       Γöé   SQLite    Γöé
+     Γöé  Vault      Γöé       Γöé (ChromaDB)  Γöé       Γöé  Database   Γöé
+     ΓööΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÿ       ΓööΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÿ       ΓööΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÿ
 ```
-
-### 5.2 Components
-
-| Component | Responsibility | Format/Technology |
-|-----------|----------------|-------------------|
-| ai_router.py | AI provider abstraction + auto-select | Python class |
-| material_manager.py | CRUD + novelty scoring | Python class |
-| video_analyzer.py | YouTube parsing + summarization | Python class |
-| database.py | SQLite operations | SQLAlchemy |
-| cli/main.py | CLI commands | Typer + Rich |
-| obsidian.py | Obsidian vault sync | Python + Obsidian API |
-| api.py | HTTP API server | Flask/FastAPI |
-
-### 5.3 Data Flow
-
-1. **Add Material:** `add` → normalize URL → check duplicates → save to DB
-2. **Analyze:** `analyze` → fetch transcript → generate summary → extract tags → compute novelty
-3. **Learn:** `learn` → update status → trigger re-index of pending materials
-4. **Query:** `query` → search DB → return ranked results
 
 ---
 
-## 6. Data Model
+## AI Providers (Current Status)
 
-### 6.1 Entities
+### Priority Order
+
+1. **Ollama (local)** ✅ Working
+   - `llama3.2:1b` — current default (~2.8s, 1.3 GB)
+   - `phi3:latest` — downloaded (~7.7s, 2.2 GB)
+   - `nomic-embed-text` — for embeddings
+
+2. **Chinese APIs** ✅ Tested
+   - **Zhipu AI** ✅ Working (GLM-4, GLM-4-flash)
+   - **SiliconFlow** ⚠️ Works but no balance
+   - **DeepSeek** ❌ Needs Alipay payment
+
+3. **Cloud APIs** 🔲 Not needed yet
+   - OpenAI (expensive)
+   - Anthropic (expensive)
+
+### Configuration
 
 ```python
-class Material:
-    id: str                      # UUID
-    obsidian_path: str | None   # Path in vault
-    type: str                    # "video", "article"
-    source_url: str | None       # YouTube URL
-    title: str                   # Material title
-    status: str                  # "pending", "analyzing", "learned", "skipped"
-    novelty_score: float | None  # 0-1, higher = more novel
-    tags: list[str]              # Extracted tags
-    summary: str | None          # Generated summary
-    added_at: datetime           # When added
-    analyzed_at: datetime | None # When analyzed
-    learned_at: datetime | None  # When marked learned
-    video_metadata: VideoMetadata | None
-    related_materials: list[str] # IDs of related
-
-class VideoMetadata:
-    channel: str | None
-    views: int | None
-    likes: int | None
-    transcript: str | None
-    chapters: list[VideoChapter]
-    duration: int | None
+# Current config.yaml equivalent
+ai:
+  default_provider: "ollama"
+  ollama:
+    base_url: "http://localhost:11434"
+    model: "llama3.2:1b"
+    embedding_model: "nomic-embed-text"
+  proxy:
+    # Auto-detected from Obsidian/Work/Idea proxy settings.md
 ```
 
-### 6.2 Data Formats
+---
 
-**SQLite Schema:**
+## ╨Ü╨╛╨╝╨┐╨╛╨╜╨╡╨╜╤é╤ï
+
+### 1. Core (Python Library)
+
+**AI Router** ΓÇö Γ£à Implemented
+- Ollama local support
+- Extensible for cloud APIs
+- Embeddings via nomic-embed-text
+
+**Material Manager** ΓÇö Γ£à Implemented
+- `add_material()` ΓÇö ╨┤╨╛╨▒╨░╨▓╨╗╨╡╨╜╨╕╨╡ ╨╝╨░╤é╨╡╤Ç╨╕╨░╨╗╨░
+- `compute_novelty()` ΓÇö ╨╛╤å╨╡╨╜╨║╨░ ╨╜╨╛╨▓╨╕╨╖╨╜╤ï
+- `analyze_material()` ΓÇö ╨░╨╜╨░╨╗╨╕╨╖ ╨╕ ╤é╨╡╨│╨╕╤Ç╨╛╨▓╨░╨╜╨╕╨╡
+
+**Video Analyzer** ΓÇö Γ£à Implemented
+- `summarize_video()` ΓÇö ╤é╤Ç╨░╨╜╤ü╨║╤Ç╨╕╨┐╤å╨╕╤Å + ╤ü╤â╨╝╨╝╨░╤Ç╨╕╨╖╨░╤å╨╕╤Å
+- `get_chapters()` ΓÇö ╨┐╨░╤Ç╤ü╨╕╨╜╨│ ╨│╨╗╨░╨▓ YouTube
+- `get_transcript()` ΓÇö ╨┐╨╛╨╗╤â╤ç╨╡╨╜╨╕╨╡ ╤é╤Ç╨░╨╜╤ü╨║╤Ç╨╕╨┐╤é╨░
+
+**Knowledge Base** ΓÇö ≡ƒöä Planned
+- `query_learned()` ΓÇö ╨┐╨╛╨╕╤ü╨║ ╨▓ ╨╕╨╖╤â╤ç╨╡╨╜╨╜╤ï╤à
+- ChromaDB integration
+
+**Learning Planner** ΓÇö ≡ƒöä Planned
+- `get_learning_path()` ΓÇö ╨┐╨╛╤ü╤é╤Ç╨╛╨╡╨╜╨╕╨╡ ╤é╤Ç╨░╨╡╨║╤é╨╛╤Ç╨╕╨╕
+- `find_next_materials()` ΓÇö ╨┐╨╛╨╕╤ü╨║ ╤ü╨╗╨╡╨┤╤â╤Ä╤ë╨╕╤à ╨╝╨░╤é╨╡╤Ç╨╕╨░╨╗╨╛╨▓
+
+### 2. CLI Client ΓÇö Γ£à Working
+
+```bash
+# ╨ú╨┐╤Ç╨░╨▓╨╗╨╡╨╜╨╕╨╡ ╨╝╨░╤é╨╡╤Ç╨╕╨░╨╗╨░╨╝╨╕
+secretary add <url_or_path>          # ╨ö╨╛╨▒╨░╨▓╨╕╤é╤î ╨╝╨░╤é╨╡╤Ç╨╕╨░╨╗
+secretary list-materials             # ╨í╨┐╨╕╤ü╨╛╨║ ╨╝╨░╤é╨╡╤Ç╨╕╨░╨╗╨╛╨▓
+secretary status <id>                # ╨í╤é╨░╤é╤â╤ü ╨╝╨░╤é╨╡╤Ç╨╕╨░╨╗╨░
+secretary analyze <id>               # ╨É╨╜╨░╨╗╨╕╨╖ ╨╕ ╤ü╤â╨╝╨╝╨░╤Ç╨╕╨╖╨░╤å╨╕╤Å
+secretary learn <id> --sync          # ╨ÿ╨╖╤â╤ç╨╡╨╜╨╛ + ╤ü╨╕╨╜╤à╤Ç╨╛╨╜╨╕╨╖╨░╤å╨╕╤Å
+
+# ╨Æ╨╕╨┤╨╡╨╛
+secretary video-summarize <yt_url>  # ╨í╤â╨╝╨╝╨░╤Ç╨╕╨╖╨╕╤Ç╨╛╨▓╨░╤é╤î ╨▓╨╕╨┤╨╡╨╛
+secretary video-chapters <yt_url>   # ╨ƒ╨╛╨╗╤â╤ç╨╕╤é╤î ╨│╨╗╨░╨▓╤ï
+secretary video-find <yt_url>       # ╨¥╨░╨╣╤é╨╕ ╨╝╨╛╨╝╨╡╨╜╤é ╨▓ ╨▓╨╕╨┤╨╡╨╛
+
+# ╨í╨╕╨╜╤à╤Ç╨╛╨╜╨╕╨╖╨░╤å╨╕╤Å
+secretary sync                       # ╨í╨╕╨╜╤à╤Ç╨╛╨╜╨╕╨╖╨░╤å╨╕╤Å ╤ü Obsidian
+secretary add-from-tabs              # ╨ÿ╨╖ ╨╛╤é╨║╤Ç╤ï╤é╤ï╤à ╤é╨░╨▒╨╛╨▓
+
+# ╨ƒ╨╛╨╕╤ü╨║
+secretary search <query>             # ╨ƒ╨╛╨╕╤ü╨║ ╨▓ ╨╕╨╖╤â╤ç╨╡╨╜╨╜╤ï╤à
+```
+
+### 3. Obsidian Plugin ΓÇö ≡ƒöä Planned
+
+**Commands (Command Palette)**
+- `Secretary: Add current note as material`
+- `Secretary: Analyze selected material`
+- `Secretary: Search knowledge base`
+
+**Side Panel**
+- Dashboard ╤ü pending ╨╝╨░╤é╨╡╤Ç╨╕╨░╨╗╨░╨╝╨╕
+- Learning plan (recommended)
+- Recently studied topics
+
+### 4. Browser Tab Parser ΓÇö ≡ƒöä Planned
+
+╨ÿ╤ü╨┐╨╛╨╗╤î╨╖╤â╨╡╨╝ **brotab** ΓÇö CLI-native ╨┐╨╛╨┤╤à╨╛╨┤.
+
+```bash
+# ╨ƒ╨╛╨╗╤â╤ç╨╕╤é╤î ╨▓╤ü╨╡ YouTube ╤é╨░╨▒╤ï
+secretary add-from-tabs --filter "youtube.com"
+```
+
+---
+
+## Summarization Prompts
+
+### Current Implementation
+
+**English Summary:**
+```
+Analyze this transcript and create a structured summary.
+
+Format:
+1. **What it's about:** (1 sentence - no "video")
+2. **Key points:** (3-5 bullets - specific ideas, facts)
+3. **Tools/Solutions:** (names + description + key difference)
+4. **Conclusion:** (takeaway)
+
+Be specific. If this is a comparison - describe key differences.
+```
+
+**Russian Summary:**
+Same format, Russian headings, language-aware (detects transcript language).
+
+### Tags Format
+
+```
+Extract ONLY English tags (lowercase, 1-3 words). Max 16 tags.
+Example: ai, youtube, summarizer, tools, productivity
+```
+
+---
+
+## ╨í╤é╤Ç╤â╨║╤é╤â╤Ç╨░ ╨┤╨░╨╜╨╜╤ï╤à
+
+### Obsidian Frontmatter (current)
+
+```yaml
+---
+created: 2026-04-04
+type: video
+status: learned
+source_url: https://youtube.com/watch?v=...
+tags: [youtube, tools, summarizer, deck up, 85]
+summary: |
+  **What it's about:** ...
+  **Key points:** ...
+  **Tools/Solutions:** ...
+  **Conclusion:** ...
+duration: 538
+chapters:
+  - {time: 0, title: "Best YouTube AI Summary Tools"}
+novelty_score: 1.00
+learned_at: 2026-04-04
+---
+```
+
+### SQLite Schema ΓÇö Γ£à Implemented
+
 ```sql
 CREATE TABLE materials (
   id TEXT PRIMARY KEY,
@@ -201,7 +223,7 @@ CREATE TABLE materials (
   type TEXT,
   source_url TEXT,
   title TEXT,
-  status TEXT DEFAULT 'pending',
+  status TEXT,
   novelty_score REAL,
   tags_json TEXT,
   summary TEXT,
@@ -213,129 +235,176 @@ CREATE TABLE materials (
 );
 ```
 
-**Obsidian Frontmatter:**
-```yaml
----
-created: 2026-04-04
-type: video
-status: learned
-source_url: https://youtube.com/watch?v=...
-tags: [ai, youtube, summarizer]
-summary: |
-  **What it's about:** ...
-  **Key points:** ...
-novelty_score: 0.85
-learned_at: 2026-04-05
----
+### Vector DB (ChromaDB) ΓÇö ≡ƒöä Planned
+
+```python
+# Planned collections
+"learned_materials"   # ╨Æ╤ü╨╡ ╨╕╨╖╤â╤ç╨╡╨╜╨╜╤ï╨╡
+"pending_materials"   # ╨₧╨╢╨╕╨┤╨░╤Ä╤ë╨╕╨╡ ╨░╨╜╨░╨╗╨╕╨╖╨░
 ```
 
 ---
 
-## 7. API / Interfaces
+## ╨É╨╗╨│╨╛╤Ç╨╕╤é╨╝╤ï
 
-### 7.1 CLI Commands
+### Novelty Score ΓÇö Γ£à Implemented
+
+```
+novelty = 1 - avg(cosine_similarities)
+
+Threshold:
+- novelty > 0.7: MUST LEARN (recommendation: "FULL")
+- novelty 0.4-0.7: REVIEW PARTS (recommendation: "PARTS")
+- novelty < 0.4: SKIP (recommendation: "SKIP")
+```
+
+### Duplicate Detection ΓÇö ≡ƒöä Planned
+
+```
+is_duplicate(url) OR is_duplicate(title_similarity > 0.9)
+```
+
+---
+
+## ╨ñ╨░╨╣╨╗╨╛╨▓╨░╤Å ╤ü╤é╤Ç╤â╨║╤é╤â╤Ç╨░ ╨┐╤Ç╨╛╨╡╨║╤é╨░
+
+```
+ai-secretary/
+Γö£ΓöÇΓöÇ src/
+Γöé   ΓööΓöÇΓöÇ secretary/
+Γöé       Γö£ΓöÇΓöÇ __init__.py
+Γöé       Γö£ΓöÇΓöÇ config.py              # Settings
+Γöé       Γö£ΓöÇΓöÇ enums.py               # MaterialType, MaterialStatus
+Γöé       Γö£ΓöÇΓöÇ models.py               # Pydantic models
+Γöé       Γö£ΓöÇΓöÇ ai_router.py           # AI provider abstraction
+Γöé       Γö£ΓöÇΓöÇ database.py            # SQLite operations
+Γöé       Γö£ΓöÇΓöÇ material_manager.py     # Material CRUD + novelty
+Γöé       Γö£ΓöÇΓöÇ video_analyzer.py       # YouTube parsing/summarization
+Γöé       Γö£ΓöÇΓöÇ obsidian.py            # Obsidian vault sync
+Γöé       ΓööΓöÇΓöÇ cli/
+Γöé           ΓööΓöÇΓöÇ main.py            # CLI commands
+Γö£ΓöÇΓöÇ docs/
+Γöé   ΓööΓöÇΓöÇ research/                  # Research documents
+Γöé       Γö£ΓöÇΓöÇ free-llm-apis-2026.md
+Γöé       Γö£ΓöÇΓöÇ youtube-summarizers-research.md
+Γöé       ΓööΓöÇΓöÇ chinese-ai-for-russia.md
+Γö£ΓöÇΓöÇ agents/                       # Agent context
+Γöé   Γö£ΓöÇΓöÇ CURRENT_TASK.md
+Γöé   Γö£ΓöÇΓöÇ DECISIONS.md
+Γöé   ΓööΓöÇΓöÇ RESEARCH/
+Γö£ΓöÇΓöÇ pyproject.toml
+Γö£ΓöÇΓöÇ README.md
+ΓööΓöÇΓöÇ .env.example
+```
+
+---
+
+## ╨á╨╡╨░╨╗╨╕╨╖╨░╤å╨╕╤Å ╨┐╨╛ ╤ä╨░╨╖╨░╨╝
+
+### Phase 1: Core MVP ΓÇö Γ£à Complete
+- [x] AI Router ╤ü Ollama
+- [x] Material Manager (add, list, status)
+- [x] SQLite database
+- [x] CLI ╨╕╨╜╤é╨╡╤Ç╤ä╨╡╨╣╤ü
+- [x] ╨ÿ╨╜╤é╨╡╨│╤Ç╨░╤å╨╕╤Å ╤ü Obsidian (sync)
+- [x] Video parsing (yt-dlp)
+- [x] Summarization (structured prompts)
+- [x] Tags extraction (English, lowercase)
+- [x] Novelty scoring
+
+### Phase 2: Intelligence ΓÇö ≡ƒöä In Progress
+- [x] YouTube video parsing
+- [x] ╨ó╤Ç╨░╨╜╤ü╨║╤Ç╨╕╨┐╤å╨╕╤Å (youtube-transcript-api)
+- [x] ╨í╤â╨╝╨╝╨░╤Ç╨╕╨╖╨░╤å╨╕╤Å (structured)
+- [ ] ChromaDB ╨╕╨╜╤é╨╡╨│╤Ç╨░╤å╨╕╤Å
+- [ ] ╨ú╨╝╨╜╤ï╨╡ ╤Ç╨╡╨║╨╛╨╝╨╡╨╜╨┤╨░╤å╨╕╨╕
+
+### Phase 3: Video Analysis ΓÇö ≡ƒöä Partial
+- [x] YouTube video parsing
+- [x] ╨ô╨╗╨░╨▓╤ï ╨▓╨╕╨┤╨╡╨╛
+- [x] ╨í╤â╨╝╨╝╨░╤Ç╨╕╨╖╨░╤å╨╕╤Å
+- [ ] Whisper API ╨┤╨╗╤Å ╨░╤â╨┤╨╕╨╛ (╨╡╤ü╨╗╨╕ ╨╜╨╡╤é ╤é╤Ç╨░╨╜╤ü╨║╤Ç╨╕╨┐╤é╨░)
+
+### Phase 4: Ecosystem ΓÇö ≡ƒöä Planned
+- [ ] Chinese AI providers (SiliconFlow, Zhipu)
+- [ ] Brotab integration
+- [ ] Obsidian plugin
+- [ ] Learning planner
+- [ ] Reindex ╨┐╨╛ ╤Ç╨░╤ü╨┐╨╕╤ü╨░╨╜╨╕╤Ä
+
+---
+
+## ╨ù╨░╨▓╨╕╤ü╨╕╨╝╨╛╤ü╤é╨╕ (Python)
+
+```toml
+[project]
+requires-python = ">=3.11"
+dependencies = [
+    "typer",                    # CLI
+    "rich",                     # Pretty output
+    "openai",                   # OpenAI API
+    "anthropic",                # Anthropic API
+    "chromadb",                 # Vector DB (future)
+    "sqlalchemy",               # DB ORM
+    "pydantic",                 # Data models
+    "pydantic-settings",        # Settings
+    "yt-dlp",                   # YouTube parsing
+    "youtube-transcript-api",    # Subtitles
+]
+```
+
+---
+
+## Environment Variables
 
 ```bash
-# Materials
-secretary add <url>                      # Add material
-secretary list-materials                 # List all
-secretary status <id>                    # Show status
-secretary analyze <id>                   # Analyze + summarize
-secretary learn <id> --sync              # Mark learned + sync
+# AI Keys (optional if using Ollama)
+OPENAI_API_KEY=sk-...
+ANTHROPIC_API_KEY=sk-ant-...
 
-# Video
-secretary video-summarize <url>          # Summarize video
-secretary video-chapters <url>           # Get chapters
+# Ollama (local)
+OLLAMA_BASE_URL=http://localhost:11434
 
-# AI
-secretary ask <question>                 # Query AI
-secretary compare <a> <b>                 # Compare items
-secretary research <topic>               # Research topic
+# Paths
+OBSIDIAN_VAULT_PATH=D:/_Documents/Obsidian
+SECRETARY_DATA_PATH=~/.secretary
 
-# Knowledge Base
-secretary query <text>                   # Search
-secretary recommend                      # Get recommendations
+# AI Defaults
+DEFAULT_AI_PROVIDER=ollama
+OLLAMA_MODEL=llama3.2:1b
 
-# System
-secretary providers                      # Show AI providers
-secretary add-from-tabs                  # Import from browser
+# Proxy (auto-detected)
+# PROXY_URL=http://127.0.0.1:12334
 ```
 
-### 7.2 API Server Endpoints
+---
 
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| GET | /health | Health check |
-| GET | /providers | Available AI providers |
-| GET | /ask?q=... | Ask AI question |
-| GET | /recommend | Learning recommendations |
-| GET | /query?q=... | Search knowledge base |
-| GET | /materials | List all materials |
+## Hardware Context
+
+- **CPU:** i5-13400F (10C/16T)
+- **RAM:** 32 GB
+- **GPU:** RTX 3070 (8 GB VRAM) ΓÇö Ollama working
+- **Disk:** 130 GB free on C:
 
 ---
 
-## 8. Edge Cases
+## Research Documents
 
-| ID | Scenario | Expected Behavior |
-|----|----------|-------------------|
-| EC-001 | No transcript available | Use video title + metadata only |
-| EC-002 | Duplicate URL | Raise error, don't add |
-| EC-003 | Very long transcript | Truncate to 4000 chars |
-| EC-004 | AI provider fails | Auto-fallback to next provider |
-| EC-005 | Browser history locked | Return empty, show warning |
-| EC-006 | Proxy required but not working | Show error, continue without |
-| EC-007 | Non-YouTube URL | Accept but skip video-specific features |
+See `docs/research/` for:
+- `free-llm-apis-2026.md` ΓÇö All free LLM APIs
+- `youtube-summarizers-research.md` ΓÇö Video summarization best practices
+- `chinese-ai-for-russia.md` ΓÇö Chinese AI for Russia access
 
 ---
 
-## 9. Acceptance Criteria
+## Roadmap (Updated 2026-04-05)
 
-| ID | Criterion | Verification Method |
-|----|-----------|---------------------|
-| AC-001 | `secretary add <yt_url>` creates material with normalized URL | Run command, verify DB |
-| AC-002 | `secretary analyze <id>` populates summary + tags | Run, check fields |
-| AC-003 | `secretary query` returns matching learned materials | Add learned material, query by keyword |
-| AC-004 | Novelty score distinguishes new from duplicate content | Add similar videos, compare scores |
-| AC-005 | `secretary ask` returns response from AI | Run, verify response |
-| AC-006 | Provider auto-select chooses working provider | Disable one provider, verify fallback |
-| AC-007 | Obsidian sync creates proper markdown file | Run sync, check vault |
-
----
-
-## 10. Risks & Trade-offs
-
-### 10.1 Risks
-
-| ID | Risk | Probability | Impact | Mitigation |
-|----|------|-------------|--------|------------|
-| R-001 | Proxy connection flaky | High | Medium | Graceful fallback |
-| R-002 | Zhipu API changes | Medium | Low | Config-driven endpoint |
-| R-003 | Small models produce template phrases | High | Low | Use larger models (phi3) |
-
-### 10.2 Trade-offs
-
-| Decision | Alternative | Why This Choice |
-|----------|-------------|-----------------|
-| CLI-first approach | GUI or web UI | Simpler, faster to build |
-| Free AI providers only | Paid APIs | Accessibility from Russia |
-| SQLite over PostgreSQL | PostgreSQL | Simpler, sufficient for use case |
-| Single-file config | Multi-file config | Single source of truth |
-
----
-
-## 11. Open Questions
-
-| ID | Question | Owner | Status |
-|----|----------|-------|--------|
-| OQ-001 | How to handle non-video materials (articles)? | Owner | Open |
-| OQ-002 | Should we implement real-time YouTube notifications? | Owner | Open |
-| OQ-003 | Best strategy for ChromaDB integration? | Owner | Open |
-
----
-
-## 12. Changelog
-
-| Version | Date | Changes | Author |
-|---------|------|---------|--------|
-| v1 | 2026-04-04 | Initial spec creation | Dev |
-| v2 | 2026-04-05 | Refined with spec-template, added all sections | Workflow |
+| Priority | Task | Status |
+|----------|------|--------|
+| Done | Setup GitHub repo | Done |
+| Done | Test Chinese APIs (Zhipu AI) | Done |
+| Done | Brotab + browser-history integration | Done |
+| Done | Agentic chain research | Done |
+| Backlog | ChromaDB for embeddings | Backlog |
+| Backlog | Learning planner | Backlog |
+| Backlog | Obsidian plugin | Backlog |
